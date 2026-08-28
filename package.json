@@ -1,0 +1,10 @@
+{
+  "name": "founderbee-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FounderBee revenue and subscriber dashboard",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}
