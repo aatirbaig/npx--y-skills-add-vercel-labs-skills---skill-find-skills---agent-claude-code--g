@@ -107,6 +107,10 @@ Set `NEXT_PUBLIC_SITE_URL`, `AUTH_SECRET`, `RESEND_API_KEY`, `DATABASE_URL` +
 `DATABASE_AUTH_TOKEN` (Turso), the four `STRIPE_*` values and `REDEMPTIONS_JSON`. Run
 `pnpm db:push` against the production database once, then deploy.
 
+**Anywhere but Vercel, also set `AUTH_TRUST_HOST=true`** (or pin `AUTH_URL` to the exact
+origin). Auth.js infers a trusted host on Vercel and in development, and rejects everything
+else as `UntrustedHost` — which surfaces as sign-in that appears to work but never sends.
+
 Most routes prerender; only deal pages, the dashboard, login and the API routes are dynamic. Keep
 it that way — a session read in `app/layout.tsx` would opt the entire site out of static
 rendering, which is why the header's account link is a client component.

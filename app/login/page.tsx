@@ -17,6 +17,7 @@ export default async function LoginPage(props: PageProps<"/login">) {
 
   const params = await props.searchParams;
   const next = typeof params.next === "string" ? params.next : "/dashboard";
+  const sendFailed = params.error === "send";
 
   return (
     <Container className="flex min-h-[70vh] items-center justify-center py-16">
@@ -26,18 +27,39 @@ export default async function LoginPage(props: PageProps<"/login">) {
           We email you a link. No password, no setup.
         </p>
 
+        {sendFailed ? (
+          <p
+            role="alert"
+            className="mt-6 rounded-lg border border-accent/40 bg-accent-soft px-4 py-3 text-sm text-muted"
+          >
+            We could not send that link. Try again in a moment — if it keeps
+            failing, the email provider is misconfigured on this deployment.
+          </p>
+        ) : null}
+
         {authConfigured ? (
           <form
             action={async (formData: FormData) => {
               "use server";
               // `redirect: false` keeps Auth.js from bouncing through its own
               // verify-request route; we send people straight to our page.
-              await signIn("resend", {
-                email: String(formData.get("email") ?? ""),
-                redirectTo: next,
-                redirect: false,
-              });
-              redirect("/login/check-email");
+              let destination = "/login/check-email";
+              try {
+                const result = await signIn("resend", {
+                  email: String(formData.get("email") ?? ""),
+                  redirectTo: next,
+                  redirect: false,
+                });
+                // Auth.js reports a failed send by handing back an error URL
+                // rather than throwing. Telling someone to check an inbox that
+                // will stay empty is worse than telling them it broke.
+                if (typeof result === "string" && result.includes("error=")) {
+                  destination = "/login?error=send";
+                }
+              } catch {
+                destination = "/login?error=send";
+              }
+              redirect(destination);
             }}
             className="mt-6 space-y-3"
           >
