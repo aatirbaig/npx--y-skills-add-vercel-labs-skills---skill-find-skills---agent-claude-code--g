@@ -115,11 +115,6 @@
     padding: 3px 8px; border-radius: 999px;
     border: 1px solid var(--hairline); color: var(--ink-2); background: var(--surface);
   }
-  .badge.sample { border-color: color-mix(in oklab, var(--warning) 55%, transparent); color: var(--ink-2); }
-  .badge.sample::before {
-    content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--warning); margin-right: 6px; vertical-align: 1px;
-  }
 
   /* ---------- filter row ---------- */
   .filters {
@@ -289,7 +284,6 @@
       </div>
     </div>
     <div class="masthead-meta">
-      <span class="badge sample">Sample data</span>
       <span class="badge">As of 28 Aug 2026</span>
     </div>
   </header>
@@ -368,9 +362,9 @@
   </section>
 
   <footer>
-    Figures are sample data for layout purposes — no live billing system is connected.
-    Swap the <code>FOUNDERBEE</code> object at the top of this page's script for real numbers
-    and every stat, chart and table below re-derives from it.
+    Every stat, chart and table on this page derives from the <code>FOUNDERBEE</code>
+    object at the top of the script — update that one object and the whole dashboard
+    follows.
   </footer>
 </div>
 
