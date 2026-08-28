@@ -6,7 +6,13 @@ name: Deploy
 # a token pasted into a chat.
 on:
   push:
-    branches: ["claude/foundersbee-plan-reference-4poyjm", "main", "master"]
+    # This repository's default branch is not main or master, so it has to be
+    # named explicitly — otherwise the deploy never fires on the branch the
+    # code actually lives on.
+    branches:
+      - claude/vercel-labs-skills-kyzrd9
+      - main
+      - master
   workflow_dispatch:
 
 concurrency:
