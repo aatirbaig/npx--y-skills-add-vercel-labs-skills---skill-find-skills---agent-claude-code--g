@@ -103,6 +103,18 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 ## Deployment
 
+The repo ships a `Deploy` workflow (`.github/workflows/deploy.yml`). Add a single repository
+secret, `VERCEL_TOKEN` (Settings → Secrets and variables → Actions), and every push to the
+deployment branch ships to Vercel and prints the live URL in the run summary. Without the secret
+the workflow skips cleanly, so it is harmless until you want it. Set the repository variable
+`VERCEL_SCOPE` to your team slug if the token belongs to a team.
+
+Importing the repo at [vercel.com/new](https://vercel.com/new) works just as well and needs no
+secret at all — pick whichever you prefer, but not both, or you will get two deployments per push.
+
+The public catalog needs no environment variables whatsoever: it builds and serves with a
+completely empty environment. Everything below is only needed once you want sign-in and payments.
+
 Set `NEXT_PUBLIC_SITE_URL`, `AUTH_SECRET`, `RESEND_API_KEY`, `DATABASE_URL` +
 `DATABASE_AUTH_TOKEN` (Turso), the four `STRIPE_*` values and `REDEMPTIONS_JSON`. Run
 `pnpm db:push` against the production database once, then deploy.

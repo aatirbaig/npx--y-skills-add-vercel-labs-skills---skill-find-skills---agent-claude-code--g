@@ -1,0 +1,101 @@
+name: Deploy
+
+# This session's sandbox cannot reach api.vercel.com — the egress policy rejects
+# it — so the deploy runs from a GitHub runner, which can. Add one repository
+# secret, VERCEL_TOKEN, and every push to this branch ships. Nothing here needs
+# a token pasted into a chat.
+on:
+  push:
+    branches: ["claude/foundersbee-plan-reference-4poyjm", "main", "master"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vercel:
+    name: Vercel
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # Optional: set the repository variable VERCEL_SCOPE to your team slug if
+      # the token belongs to a team rather than a personal account.
+      VERCEL_SCOPE: ${{ vars.VERCEL_SCOPE }}
+      PROJECT_NAME: foundersbee
+    steps:
+      - name: Check for a token
+        id: guard
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Deploy skipped"
+              echo
+              echo "No \`VERCEL_TOKEN\` secret is set on this repository."
+              echo "Add one under **Settings → Secrets and variables → Actions**,"
+              echo "then re-run this workflow."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.guard.outputs.skip != 'true'
+
+      - uses: pnpm/action-setup@v4
+        if: steps.guard.outputs.skip != 'true'
+
+      - uses: actions/setup-node@v5
+        if: steps.guard.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install the Vercel CLI
+        if: steps.guard.outputs.skip != 'true'
+        run: npm install -g vercel@latest
+
+      - name: Link the project
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          # Creates the project on first run and reuses it afterwards. Without an
+          # explicit name it would be called after this repository's directory,
+          # which is not a name anyone wants in a URL.
+          vercel link --yes \
+            --project "$PROJECT_NAME" \
+            ${VERCEL_SCOPE:+--scope "$VERCEL_SCOPE"} \
+            --token "$VERCEL_TOKEN"
+
+      - name: Pull project settings
+        if: steps.guard.outputs.skip != 'true'
+        run: vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Build
+        if: steps.guard.outputs.skip != 'true'
+        run: vercel build --prod --token "$VERCEL_TOKEN"
+
+      - name: Deploy
+        if: steps.guard.outputs.skip != 'true'
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "### FoundersBee is live"
+            echo
+            echo "$url"
+            echo
+            echo "The public catalog needs no environment variables."
+            echo "For sign-in and the dashboard, add \`AUTH_SECRET\` and a Turso"
+            echo "\`DATABASE_URL\` + \`DATABASE_AUTH_TOKEN\` in the Vercel project,"
+            echo "then re-run this workflow."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Smoke-test the deployment
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          url="${{ steps.deploy.outputs.url }}"
+          for path in "" "/deals" "/pricing"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 3 "$url$path")
+            echo "$code  $url$path"
+            [ "$code" = "200" ] || { echo "::error::$url$path returned $code"; exit 1; }
+          done
