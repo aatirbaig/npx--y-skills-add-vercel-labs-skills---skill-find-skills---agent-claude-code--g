@@ -1,9 +1,11 @@
 name: CI
 
+# Push only: a `pull_request` trigger alongside this one runs the whole suite
+# twice for every commit on a same-repo PR, and the push run already reports
+# onto the PR.
 on:
   push:
     branches: ["**"]
-  pull_request:
 
 concurrency:
   group: ci-${{ github.ref }}
