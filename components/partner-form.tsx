@@ -11,22 +11,22 @@ export function PartnerForm() {
 
   if (state.status === "sent") {
     return (
-      <div className="rounded-xl border border-accent/40 bg-accent-soft p-6">
-        <p className="font-medium text-accent-strong">Submission received</p>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted">{state.message}</p>
+      <div className="rounded-[8px] border border-foil/40 bg-foil-wash p-7">
+        <p className="display text-2xl text-foil-ink">Submission received</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{state.message}</p>
       </div>
     );
   }
 
   return (
-    <form action={action} className="space-y-4 rounded-xl border border-border bg-surface p-6">
+    <form action={action} className="space-y-5 rounded-[8px] border border-rule bg-paper p-7">
       <Field name="company" label="Company" error={state.fieldErrors?.company}>
         <input
           id="company"
           name="company"
           required
           maxLength={120}
-          className="h-11 w-full rounded-lg border border-border bg-bg px-3.5 text-sm outline-none focus:border-accent"
+          className="h-12 w-full rounded-[6px] border border-rule-strong bg-ivory px-4 text-sm outline-none transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] focus:border-foil"
         />
       </Field>
 
@@ -36,7 +36,7 @@ export function PartnerForm() {
           name="email"
           type="email"
           required
-          className="h-11 w-full rounded-lg border border-border bg-bg px-3.5 text-sm outline-none focus:border-accent"
+          className="h-12 w-full rounded-[6px] border border-rule-strong bg-ivory px-4 text-sm outline-none transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] focus:border-foil"
         />
       </Field>
 
@@ -47,7 +47,7 @@ export function PartnerForm() {
           type="url"
           required
           placeholder="https://"
-          className="h-11 w-full rounded-lg border border-border bg-bg px-3.5 text-sm outline-none placeholder:text-muted focus:border-accent"
+          className="h-12 w-full rounded-[6px] border border-rule-strong bg-ivory px-4 text-sm outline-none transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] placeholder:text-ink-soft focus:border-foil"
         />
       </Field>
 
@@ -58,12 +58,12 @@ export function PartnerForm() {
           required
           rows={4}
           placeholder="What founders get, who qualifies, and how it's claimed."
-          className="w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-sm outline-none placeholder:text-muted focus:border-accent"
+          className="w-full rounded-[6px] border border-rule-strong bg-ivory px-4 py-3 text-sm outline-none transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] placeholder:text-ink-soft focus:border-foil"
         />
       </Field>
 
       {state.status === "error" && !state.fieldErrors ? (
-        <p role="alert" className="text-sm text-muted">
+        <p role="alert" className="text-sm text-ink-soft">
           {state.message}
         </p>
       ) : null}
@@ -93,7 +93,7 @@ function Field({
       </label>
       {children}
       {error ? (
-        <p role="alert" className="mt-1.5 text-xs text-accent-strong">
+        <p role="alert" className="mt-1.5 text-xs text-foil-ink">
           {error}
         </p>
       ) : null}

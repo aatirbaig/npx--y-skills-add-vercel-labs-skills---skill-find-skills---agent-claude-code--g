@@ -55,6 +55,7 @@ export type DealCard = Pick<
   | "savingsUsd"
   | "verifiedAt"
   | "unverifiedSeed"
+  | "expiresAt"
   | "featured"
 >;
 
@@ -73,6 +74,7 @@ export function toCard(deal: Deal): DealCard {
     savingsUsd: deal.savingsUsd,
     verifiedAt: deal.verifiedAt,
     unverifiedSeed: deal.unverifiedSeed,
+    expiresAt: deal.expiresAt,
     featured: deal.featured,
   };
 }

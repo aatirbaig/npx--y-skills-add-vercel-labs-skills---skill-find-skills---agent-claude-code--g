@@ -26,10 +26,10 @@ export function SaveButton({
           await toggleSaved(dealSlug);
         })
       }
-      className={buttonClass("secondary", "md")}
+      className={buttonClass("quiet", "md", "w-full")}
     >
       {saved ? (
-        <BookmarkCheck className="size-4 text-accent-strong" aria-hidden="true" />
+        <BookmarkCheck className="size-4 text-foil-ink" aria-hidden="true" />
       ) : (
         <Bookmark className="size-4" aria-hidden="true" />
       )}

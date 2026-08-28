@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/section";
+import { HexMark } from "@/components/ui/hex-mark";
 import { CATEGORIES } from "@/content/categories";
 import { COLLECTIONS } from "@/content/collections";
 
@@ -7,7 +8,7 @@ const COMPANY = [
   { href: "/about", label: "About" },
   { href: "/editorial-policy", label: "Editorial policy" },
   { href: "/partners", label: "For partners" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/pricing", label: "Membership" },
 ] as const;
 
 const LEGAL = [
@@ -17,13 +18,16 @@ const LEGAL = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border bg-surface">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-28 border-t border-rule bg-paper">
+      <Container className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <p className="font-semibold tracking-tight">FoundersBee</p>
-          <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">
-            Verified startup credits, grants and discounts — with the eligibility rules
-            stated before you spend an afternoon on an application.
+          <div className="flex items-center gap-2.5">
+            <HexMark label="FB" size="sm" tone="foil" />
+            <span className="display text-xl">FoundersBee</span>
+          </div>
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">
+            Verified startup credits, grants and discounts — with the eligibility rules stated
+            before you spend the afternoon on an application.
           </p>
         </div>
 
@@ -52,14 +56,14 @@ export function SiteFooter() {
         </FooterColumn>
       </Container>
 
-      <Container className="flex flex-wrap items-center justify-between gap-3 border-t border-border py-6 text-xs text-muted">
+      <Container className="flex flex-wrap items-center justify-between gap-4 border-t border-rule py-6 text-xs text-ink-soft">
         <p>
-          © {new Date().getFullYear()} FoundersBee. Vendor names are used to identify the
-          programs they run; no partnership is implied.
+          © {new Date().getFullYear()} FoundersBee. Vendor names identify the programs those
+          vendors run; no partnership is implied.
         </p>
-        <div className="flex gap-4">
+        <div className="flex gap-5">
           {LEGAL.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:text-fg">
+            <Link key={l.href} href={l.href} className="hover:text-ink">
               {l.label}
             </Link>
           ))}
@@ -72,8 +76,8 @@ export function SiteFooter() {
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-3 text-xs font-semibold tracking-widest text-fg uppercase">{title}</p>
-      <ul className="space-y-2 text-sm">{children}</ul>
+      <p className="eyebrow">{title}</p>
+      <ul className="mt-4 space-y-2.5 text-sm">{children}</ul>
     </div>
   );
 }
@@ -81,7 +85,10 @@ function FooterColumn({ title, children }: { title: string; children: React.Reac
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
-      <Link href={href} className="text-muted transition-colors hover:text-fg">
+      <Link
+        href={href}
+        className="text-ink-soft transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] hover:text-ink"
+      >
         {children}
       </Link>
     </li>

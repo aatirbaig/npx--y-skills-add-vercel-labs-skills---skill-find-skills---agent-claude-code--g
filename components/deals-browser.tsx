@@ -5,15 +5,12 @@ import { Search, X } from "lucide-react";
 import type { DealCard as DealCardData } from "@/lib/content/redact";
 import { DEAL_TYPE_LABELS, dealTypes, type DealType } from "@/lib/content/schema";
 import { CATEGORIES, type CategorySlug } from "@/content/categories";
-import { DealGrid } from "@/components/deal-card";
-import { cn, formatUsd } from "@/lib/utils";
+import { DealIndex } from "@/components/deal-card";
+import { cn, formatUsdExact } from "@/lib/utils";
 
 type TierFilter = "all" | "free" | "premium";
 
-/**
- * The catalog is a few hundred entries, so filtering happens in memory on the
- * client. No search service, no request per keystroke.
- */
+/** A few hundred entries filter fine in memory — no search service, no request per keystroke. */
 export function DealsBrowser({
   deals,
   initialCategory,
@@ -55,33 +52,29 @@ export function DealsBrowser({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="relative">
+    <div>
+      <div className="relative border-b border-rule pb-6">
         <Search
-          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted"
+          className="pointer-events-none absolute top-3.5 left-0 size-4 text-ink-soft"
           aria-hidden="true"
         />
         <input
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={`Search ${deals.length} programs — AWS, payroll, GPU credits…`}
+          placeholder={`Search ${deals.length} programs`}
           aria-label="Search deals"
-          className="h-12 w-full rounded-xl border border-border bg-surface pr-4 pl-10 text-sm outline-none placeholder:text-muted focus:border-accent"
+          className="display h-12 w-full border-0 bg-transparent pl-7 text-2xl outline-none placeholder:text-ink-soft/60"
         />
       </div>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3 py-6">
         <FilterRow label="Category">
           <Chip active={category === "all"} onClick={() => setCategory("all")}>
             All
           </Chip>
           {CATEGORIES.map((c) => (
-            <Chip
-              key={c.slug}
-              active={category === c.slug}
-              onClick={() => setCategory(c.slug)}
-            >
+            <Chip key={c.slug} active={category === c.slug} onClick={() => setCategory(c.slug)}>
               {c.name}
             </Chip>
           ))}
@@ -107,15 +100,19 @@ export function DealsBrowser({
         </FilterRow>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 border-y border-border py-3 text-sm text-muted">
-        <span aria-live="polite">
-          <strong className="font-semibold text-fg">{results.length}</strong>{" "}
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-rule py-4 text-sm">
+        <span aria-live="polite" className="text-ink-soft">
+          <strong data-figure className="font-semibold text-ink">
+            {results.length}
+          </strong>{" "}
           {results.length === 1 ? "program" : "programs"}
           {totalValue > 0 ? (
             <>
               {" · "}
-              <strong className="font-semibold text-fg">{formatUsd(totalValue)}</strong> in
-              stated value
+              <strong data-figure className="font-semibold text-ink">
+                {formatUsdExact(totalValue)}
+              </strong>{" "}
+              stated
             </>
           ) : null}
         </span>
@@ -123,22 +120,26 @@ export function DealsBrowser({
           <button
             type="button"
             onClick={reset}
-            className="ml-auto inline-flex items-center gap-1 text-muted hover:text-fg"
+            className="ml-auto inline-flex items-center gap-1.5 text-ink-soft transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] hover:text-ink"
           >
             <X className="size-3.5" aria-hidden="true" />
-            Clear filters
+            Clear
           </button>
         ) : null}
       </div>
 
       {results.length > 0 ? (
-        <DealGrid deals={results} />
+        <DealIndex deals={results} />
       ) : (
-        <div className="honeycomb rounded-xl border border-dashed border-border bg-surface/40 px-6 py-20 text-center">
-          <p className="font-medium">Nothing matches that yet.</p>
-          <p className="mt-1 text-sm text-muted">
+        <div className="border-y border-rule px-6 py-24 text-center">
+          <p className="display text-2xl">Nothing matches that yet.</p>
+          <p className="mt-2 text-sm text-ink-soft">
             Try a broader category, or{" "}
-            <button type="button" onClick={reset} className="underline underline-offset-2">
+            <button
+              type="button"
+              onClick={reset}
+              className="text-foil-ink underline underline-offset-4"
+            >
               clear the filters
             </button>
             .
@@ -151,10 +152,8 @@ export function DealsBrowser({
 
 function FilterRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <span className="mr-1 w-16 shrink-0 font-mono text-xs tracking-wider text-muted uppercase">
-        {label}
-      </span>
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+      <span className="eyebrow w-20 shrink-0 text-ink-soft">{label}</span>
       {children}
     </div>
   );
@@ -175,10 +174,12 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        "rounded-full border px-3 py-1 text-xs font-medium",
+        "transition-[background-color,border-color,color,transform] duration-[160ms]",
+        "[transition-timing-function:var(--ease-out)] active:scale-[0.97]",
         active
-          ? "border-accent bg-accent text-accent-fg"
-          : "border-border bg-surface text-muted hover:text-fg",
+          ? "border-ink bg-ink text-ivory"
+          : "border-rule bg-paper text-ink-soft hover:border-rule-strong hover:text-ink",
       )}
     >
       {children}

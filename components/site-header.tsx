@@ -5,24 +5,28 @@ import { HexMark } from "@/components/ui/hex-mark";
 import { AccountNav } from "@/components/account-nav";
 
 const NAV = [
-  { href: "/deals", label: "Deals" },
+  { href: "/deals", label: "Catalog" },
   { href: "/collections/cloud-credits", label: "Collections" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/partners", label: "For partners" },
+  { href: "/pricing", label: "Membership" },
+  { href: "/partners", label: "Partners" },
 ] as const;
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-bg/85 backdrop-blur">
-      <Container className="flex h-16 items-center gap-6">
-        <Link href="/" className="flex items-center gap-2.5 font-semibold tracking-tight">
-          <HexMark label="FB" size="sm" />
-          FoundersBee
+    <header className="sticky top-0 z-40 border-b border-rule bg-ivory/90 backdrop-blur-sm">
+      <Container className="flex h-[4.5rem] items-center gap-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <HexMark label="FB" size="sm" tone="foil" />
+          <span className="display text-xl">FoundersBee</span>
         </Link>
 
-        <nav className="hidden items-center gap-5 text-sm text-muted md:flex">
+        <nav className="hidden items-center gap-7 text-sm text-ink-soft md:flex">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-fg">
+            <Link
+              key={item.href}
+              href={item.href}
+              className="transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] hover:text-ink"
+            >
               {item.label}
             </Link>
           ))}

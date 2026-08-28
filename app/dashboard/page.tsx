@@ -6,16 +6,16 @@ import { getDb, schema } from "@/lib/db/client";
 import { getDeal } from "@/lib/content/deals";
 import { toCards } from "@/lib/content/redact";
 import { signOut } from "@/lib/auth";
-import { DealGrid } from "@/components/deal-card";
-import { Container, SectionHeading } from "@/components/ui/section";
+import { DealIndex } from "@/components/deal-card";
+import { Container, Eyebrow, SectionHeading, Stat } from "@/components/ui/section";
 import { ButtonLink, Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Chip } from "@/components/ui/chip";
 import { ManageBillingButton } from "@/components/manage-billing-button";
-import { formatUsd } from "@/lib/utils";
+import { formatUsdExact } from "@/lib/utils";
 import { PLANS } from "@/lib/stripe/plans";
 
 export const metadata: Metadata = {
-  title: "Your dashboard",
+  title: "Your account",
   robots: { index: false },
 };
 
@@ -49,67 +49,67 @@ export default async function DashboardPage() {
   const isMember = user.membership !== "free";
 
   return (
-    <Container className="py-12">
-      <header className="flex flex-wrap items-start justify-between gap-4">
+    <Container className="py-16">
+      <header className="flex flex-wrap items-start justify-between gap-6 border-b border-rule pb-10">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Your dashboard</h1>
-          <p className="mt-2 text-muted">{user.email}</p>
+          <Eyebrow>Your account</Eyebrow>
+          <h1 className="display mt-4 text-5xl">{MEMBERSHIP_LABEL[user.membership]}</h1>
+          <p className="mt-2 text-ink-soft">{user.email}</p>
         </div>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/" });
-          }}
-        >
-          <Button type="submit" variant="ghost" size="sm">
-            Sign out
-          </Button>
-        </form>
+        <div className="flex items-center gap-3">
+          {isMember ? <Chip tone="foil">Active</Chip> : null}
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/" });
+            }}
+          >
+            <Button type="submit" variant="ghost" size="sm">
+              Sign out
+            </Button>
+          </form>
+        </div>
       </header>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-border bg-surface p-5">
-          <p className="text-xs tracking-wider text-muted uppercase">Membership</p>
-          <p className="mt-2 flex items-center gap-2 text-xl font-semibold tracking-tight">
-            {MEMBERSHIP_LABEL[user.membership]}
-            {isMember ? <Badge tone="accent">Active</Badge> : null}
-          </p>
+      <dl className="grid gap-10 border-b border-rule py-10 sm:grid-cols-3">
+        <Stat label="Saved" value={savedDeals.length} hint="programs bookmarked" />
+        <Stat
+          label="Claimed"
+          value={claimedDeals.length}
+          hint={
+            unlockedValue > 0
+              ? `${formatUsdExact(unlockedValue)} in stated value`
+              : "nothing claimed yet"
+          }
+        />
+        <div>
+          <dt className="eyebrow text-ink-soft">Membership</dt>
+          <dd className="display mt-2 text-4xl">{MEMBERSHIP_LABEL[user.membership]}</dd>
           <div className="mt-4">
             {isMember ? (
               <ManageBillingButton />
             ) : (
               <ButtonLink href="/pricing" size="sm">
-                Unlock premium — ${PLANS.annual.price}/yr
+                Unlock — ${PLANS.annual.price}/year
               </ButtonLink>
             )}
           </div>
         </div>
-
-        <Stat label="Saved" value={String(savedDeals.length)} hint="programs bookmarked" />
-        <Stat
-          label="Claimed"
-          value={String(claimedDeals.length)}
-          hint={
-            unlockedValue > 0
-              ? `${formatUsd(unlockedValue)} in stated value`
-              : "nothing claimed yet"
-          }
-        />
-      </div>
+      </dl>
 
       <section className="mt-14">
         <SectionHeading
           title="Saved programs"
-          blurb="Bookmarked from a deal page. Nothing is applied for on your behalf."
+          blurb="Bookmarked from a listing. Nothing is applied for on your behalf."
           action={
-            <ButtonLink href="/deals" variant="secondary" size="sm">
+            <ButtonLink href="/deals" variant="quiet" size="sm">
               Find more
             </ButtonLink>
           }
         />
-        <div className="mt-6">
+        <div className="mt-8">
           {savedDeals.length > 0 ? (
-            <DealGrid deals={toCards(savedDeals)} />
+            <DealIndex deals={toCards(savedDeals)} />
           ) : (
             <EmptyState
               title="Nothing saved yet"
@@ -120,13 +120,13 @@ export default async function DashboardPage() {
       </section>
 
       {claimedDeals.length > 0 ? (
-        <section className="mt-14">
+        <section className="mt-16">
           <SectionHeading
             title="Claimed"
             blurb="Recorded when you opened a program's claim route from FoundersBee."
           />
-          <div className="mt-6">
-            <DealGrid deals={toCards(claimedDeals)} />
+          <div className="mt-8">
+            <DealIndex deals={toCards(claimedDeals)} />
           </div>
         </section>
       ) : null}
@@ -134,21 +134,11 @@ export default async function DashboardPage() {
   );
 }
 
-function Stat({ label, value, hint }: { label: string; value: string; hint: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-surface p-5">
-      <p className="text-xs tracking-wider text-muted uppercase">{label}</p>
-      <p className="mt-2 font-mono text-3xl font-semibold tracking-tight">{value}</p>
-      <p className="mt-1 text-sm text-muted">{hint}</p>
-    </div>
-  );
-}
-
 function EmptyState({ title, body }: { title: string; body: string }) {
   return (
-    <div className="honeycomb rounded-xl border border-dashed border-border bg-surface/40 px-6 py-16 text-center">
-      <p className="font-medium">{title}</p>
-      <p className="mt-1 text-sm text-muted">{body}</p>
+    <div className="border-y border-rule px-6 py-20 text-center">
+      <p className="display text-2xl">{title}</p>
+      <p className="mt-2 text-sm text-ink-soft">{body}</p>
     </div>
   );
 }

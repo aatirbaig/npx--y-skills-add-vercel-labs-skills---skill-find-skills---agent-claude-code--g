@@ -1,123 +1,190 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   FoundersBee tokens. Honey amber on a warm near-black; light mode keeps the
-   warmth but drops the accent to a readable ochre for text-on-light.
+   FoundersBee — private-bank editorial.
+
+   Ivory ground, ink type, foil accents. Committed single theme: the identity is
+   paper-and-gold, and a dark variant would fight the serif rather than support
+   it. Every colour is painted explicitly so nothing inherits a host ground.
    --------------------------------------------------------------------------- */
 
 :root {
-  --bg: #fbfaf7;
-  --surface: #ffffff;
-  --surface-2: #f4f1ea;
-  --border: #e5e0d4;
-  --fg: #16140f;
-  --muted: #6b6558;
-  --accent: #f5b301;
-  --accent-strong: #8a5b00;
-  --accent-fg: #1a1400;
-  --accent-soft: #fdf3d6;
-  --locked: #b4a98d;
+  --ivory: #fbf9f4;
+  --paper: #ffffff;
+  --ink: #14110b;
+  --ink-soft: #6e6656;
+  --rule: #e3ddce;
+  --rule-strong: #d3cab4;
+
+  /* Two golds, and the split is load-bearing.
+     --foil on ivory measures 3.09:1 — large text (>=24px), rules and icons only.
+     --foil-ink measures 6.06:1 — every link, label and body-size accent. */
+  --foil: #b8860b;
+  --foil-ink: #7a5a08;
+  --foil-glow: #d9a441;
+  --foil-wash: #f5efdd;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0c0b09;
-    --surface: #141210;
-    --surface-2: #1b1815;
-    --border: #2a251d;
-    --fg: #f6f3ec;
-    --muted: #9d9585;
-    --accent: #f5b301;
-    --accent-strong: #f5b301;
-    --accent-fg: #1a1400;
-    --accent-soft: #241d0c;
-    --locked: #6a6252;
-    color-scheme: dark;
-  }
-}
-
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --color-fg: var(--fg);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
-  --color-accent-fg: var(--accent-fg);
-  --color-accent-soft: var(--accent-soft);
-  --color-locked: var(--locked);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --color-ivory: var(--ivory);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-foil: var(--foil);
+  --color-foil-ink: var(--foil-ink);
+  --color-foil-glow: var(--foil-glow);
+  --color-foil-wash: var(--foil-wash);
+
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--ivory);
+  color: var(--ink);
   font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 *,
 ::before,
 ::after {
-  border-color: var(--border);
+  border-color: var(--rule);
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--foil);
+  color: var(--paper);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--foil-ink);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
-/* The honeycomb motif. Used only on the hero and empty states — one idea,
-   stated once, not repeated on every card. It paints behind the content at low
-   opacity so text stays readable on top of it. */
-.honeycomb {
-  position: relative;
-  isolation: isolate;
+/* Figures line up. A bank aesthetic depends on it. */
+.tabular,
+.font-display,
+[data-figure] {
+  font-variant-numeric: tabular-nums;
 }
 
-.honeycomb::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.07;
-  border-radius: inherit;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='96' viewBox='0 0 56 96'%3E%3Cpath d='M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L56 80 L56 112 M28 64 L0 80 L0 112' fill='none' stroke='%23f5b301' stroke-width='1'/%3E%3C/svg%3E");
-  background-size: 56px 96px;
+/* --- type roles ---------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
-/* Long-form deal copy rendered from Markdown. */
-.prose-deal :where(h2) {
+.display em {
+  font-style: italic;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--foil-ink);
+}
+
+.lede {
   font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin: 2rem 0 0.75rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  text-wrap: pretty;
 }
+
+/* --- motion -------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced motion means gentler, not absent: keep the fade, drop the travel,
+     and never leave content stranded invisible. */
+  .reveal,
+  .reveal[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- long-form deal copy ------------------------------------------------- */
+
+.prose-deal {
+  max-width: 66ch;
+}
+
+.prose-deal :where(h2) {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  margin: 2.75rem 0 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
 .prose-deal :where(h3) {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin: 1.5rem 0 0.5rem;
+  margin: 1.75rem 0 0.5rem;
 }
+
 .prose-deal :where(p) {
-  margin: 0.75rem 0;
-  color: var(--muted);
-  line-height: 1.7;
+  margin: 0.9rem 0;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  text-wrap: pretty;
 }
+
 .prose-deal :where(ul, ol) {
-  margin: 0.75rem 0;
-  padding-left: 1.25rem;
-  color: var(--muted);
-  line-height: 1.7;
+  margin: 0.9rem 0;
+  padding-left: 1.2rem;
+  color: var(--ink-soft);
+  line-height: 1.75;
 }
+
 .prose-deal :where(ul) {
   list-style: disc;
 }
@@ -125,21 +192,25 @@ body {
   list-style: decimal;
 }
 .prose-deal :where(li) {
-  margin: 0.25rem 0;
+  margin: 0.3rem 0;
 }
+
 .prose-deal :where(a) {
-  color: var(--accent-strong);
+  color: var(--foil-ink);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
+
 .prose-deal :where(strong) {
-  color: var(--fg);
+  color: var(--ink);
   font-weight: 600;
 }
+
 .prose-deal :where(code) {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background: var(--surface-2);
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
+  background: var(--foil-wash);
+  padding: 0.12em 0.35em;
+  border-radius: 3px;
 }

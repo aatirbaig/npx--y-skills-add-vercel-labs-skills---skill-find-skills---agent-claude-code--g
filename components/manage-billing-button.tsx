@@ -24,7 +24,7 @@ export function ManageBillingButton() {
             setError(data.error ?? "Could not open the billing portal.");
           })
         }
-        className={buttonClass("secondary", "sm")}
+        className={buttonClass("quiet", "sm")}
       >
         {pending ? "Opening…" : "Manage billing"}
       </button>

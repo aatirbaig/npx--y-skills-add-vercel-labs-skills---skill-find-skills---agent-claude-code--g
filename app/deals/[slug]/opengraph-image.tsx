@@ -22,33 +22,43 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0c0b09",
-          color: "#f6f3ec",
-          padding: 72,
-          fontFamily: "sans-serif",
+          background: "#fbf9f4",
+          color: "#14110b",
+          padding: 76,
+          fontFamily: "serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 26 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 28 }}>
           <div
             style={{
-              width: 34,
-              height: 34,
-              background: "#f5b301",
+              width: 32,
+              height: 32,
+              background: "#b8860b",
               clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
             }}
           />
-          <span style={{ letterSpacing: -0.5 }}>FoundersBee</span>
+          <span>FoundersBee</span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ fontSize: 30, color: "#9d9585" }}>{deal?.vendor ?? "Startup deals"}</div>
-          <div style={{ fontSize: 68, fontWeight: 600, letterSpacing: -2, lineHeight: 1.1 }}>
-            {deal?.name ?? "Verified startup credits, grants and discounts"}
+        <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+          <div style={{ fontSize: 30, color: "#6e6656", fontFamily: "sans-serif" }}>
+            {deal?.vendor ?? "Startup credits, grants & discounts"}
           </div>
-          <div style={{ fontSize: 40, color: "#f5b301" }}>{deal?.value ?? ""}</div>
+          <div style={{ fontSize: 74, letterSpacing: -2, lineHeight: 1.05 }}>
+            {deal?.name ?? "Founders leave money on the table"}
+          </div>
+          <div style={{ fontSize: 40, color: "#7a5a08" }}>{deal?.value ?? ""}</div>
         </div>
 
-        <div style={{ fontSize: 24, color: "#9d9585" }}>
+        <div
+          style={{
+            fontSize: 23,
+            color: "#6e6656",
+            fontFamily: "sans-serif",
+            borderTop: "1px solid #e3ddce",
+            paddingTop: 22,
+          }}
+        >
           Eligibility and fine print stated up front · foundersbee.com
         </div>
       </div>

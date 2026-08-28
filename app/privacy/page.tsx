@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/ui/section";
+import { Container, Eyebrow } from "@/components/ui/section";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
@@ -8,16 +8,18 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <Container className="py-16">
-      <article className="prose-deal mx-auto max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Privacy policy</h1>
+    <Container className="py-20">
+      <div className="mx-auto max-w-2xl">
+        <Eyebrow>Legal</Eyebrow>
+        <h1 className="display mt-5 text-5xl">Privacy policy</h1>
 
-        <p className="mt-4 rounded-lg border border-dashed border-border bg-surface px-4 py-3 text-sm">
+        <p className="mt-8 rounded-[6px] border border-dashed border-rule-strong bg-paper px-4 py-3 text-sm text-ink-soft">
           <strong>Draft — not legal advice.</strong> This describes what the software actually
           stores, so it is accurate as a starting point. Have a lawyer review it before launch,
           and check it against GDPR and CCPA obligations for your users.
         </p>
 
+        <article className="prose-deal mt-10">
         <h2>What we store</h2>
         <ul>
           <li>
@@ -53,7 +55,8 @@ export default function PrivacyPage() {
           the account and everything attached to it. Billing records are kept only as long as tax
           rules require.
         </p>
-      </article>
+        </article>
+      </div>
     </Container>
   );
 }

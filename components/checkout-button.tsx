@@ -8,11 +8,11 @@ import { buttonClass } from "@/components/ui/button";
 export function CheckoutButton({
   plan,
   children,
-  variant = "primary",
+  variant = "foil",
 }: {
   plan: PlanId;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "foil" | "quiet" | "inverted";
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();

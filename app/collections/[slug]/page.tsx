@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import { COLLECTIONS, getCollection } from "@/content/collections";
 import { getCollectionDeals } from "@/lib/content/deals";
 import { toCards } from "@/lib/content/redact";
-import { DealGrid } from "@/components/deal-card";
-import { Container } from "@/components/ui/section";
-import { formatUsd } from "@/lib/utils";
+import { DealIndex } from "@/components/deal-card";
+import { Container, Eyebrow } from "@/components/ui/section";
+import { formatUsdExact } from "@/lib/utils";
 
 export function generateStaticParams() {
   return COLLECTIONS.map((collection) => ({ slug: collection.slug }));
@@ -34,24 +34,29 @@ export default async function CollectionPage(props: PageProps<"/collections/[slu
   const total = deals.reduce((sum, d) => sum + d.savingsUsd, 0);
 
   return (
-    <Container className="py-12">
-      <header className="mb-10 max-w-3xl">
-        <p className="mb-2 font-mono text-xs tracking-widest text-accent-strong uppercase">
-          Collection
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          {collection.headline}
-        </h1>
-        <p className="mt-3 text-lg leading-relaxed text-muted text-pretty">
-          {collection.blurb}
-        </p>
-        <p className="mt-3 text-sm text-muted">
-          {deals.length} programs
-          {total > 0 ? ` · ${formatUsd(total)} in stated value` : ""}
+    <Container className="py-16">
+      <header className="mb-12 max-w-3xl">
+        <Eyebrow>Collection</Eyebrow>
+        <h1 className="display mt-5 text-5xl sm:text-6xl">{collection.headline}</h1>
+        <p className="lede mt-6">{collection.blurb}</p>
+        <p className="mt-5 text-sm text-ink-soft">
+          <span data-figure className="font-semibold text-ink">
+            {deals.length}
+          </span>{" "}
+          programs
+          {total > 0 ? (
+            <>
+              {" · "}
+              <span data-figure className="font-semibold text-ink">
+                {formatUsdExact(total)}
+              </span>{" "}
+              stated
+            </>
+          ) : null}
         </p>
       </header>
 
-      <DealGrid deals={toCards(deals)} />
+      <DealIndex deals={toCards(deals)} />
     </Container>
   );
 }

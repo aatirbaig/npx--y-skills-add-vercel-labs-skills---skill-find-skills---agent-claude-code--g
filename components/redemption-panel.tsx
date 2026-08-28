@@ -28,29 +28,32 @@ export function RedemptionPanel({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard can be blocked; the code is visible on screen either way.
+      // Clipboard can be blocked; the code is on screen either way.
     }
     markClaimed();
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {redemption.type === "code" ? (
-        <div className="flex flex-wrap items-center gap-2">
-          <code className="flex-1 rounded-lg border border-dashed border-accent/50 bg-accent-soft px-4 py-3 font-mono text-sm tracking-wider text-accent-strong">
+        <div className="flex flex-wrap items-center gap-3">
+          <code
+            data-figure
+            className="flex-1 rounded-[6px] border border-dashed border-foil/50 bg-foil-wash px-4 py-3 font-mono text-sm tracking-wider text-foil-ink"
+          >
             {redemption.code}
           </code>
           <button
             type="button"
             onClick={() => copyCode(redemption.code)}
-            className={buttonClass("secondary", "md")}
+            className={buttonClass("quiet", "md")}
           >
             {copied ? (
-              <Check className="size-4 text-accent-strong" aria-hidden="true" />
+              <Check className="size-4 text-foil-ink" aria-hidden="true" />
             ) : (
               <Copy className="size-4" aria-hidden="true" />
             )}
-            {copied ? "Copied" : "Copy code"}
+            {copied ? "Copied" : "Copy"}
           </button>
         </div>
       ) : null}
@@ -60,14 +63,14 @@ export function RedemptionPanel({
         target="_blank"
         rel="noopener noreferrer"
         onClick={markClaimed}
-        className={buttonClass("primary", "lg", "w-full sm:w-auto")}
+        className={buttonClass("foil", "lg", "w-full sm:w-auto")}
       >
         {redemption.label ?? "Open the program page"}
         <ArrowUpRight className="size-4" aria-hidden="true" />
       </a>
 
       {redemption.type === "form" && redemption.note ? (
-        <p className="text-sm text-muted">{redemption.note}</p>
+        <p className="text-sm text-ink-soft">{redemption.note}</p>
       ) : null}
     </div>
   );

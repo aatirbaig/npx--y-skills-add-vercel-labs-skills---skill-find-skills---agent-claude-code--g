@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/ui/section";
+import { Container, Eyebrow } from "@/components/ui/section";
 
 export const metadata: Metadata = {
   title: "Terms of service",
@@ -8,16 +8,18 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <Container className="py-16">
-      <article className="prose-deal mx-auto max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Terms of service</h1>
+    <Container className="py-20">
+      <div className="mx-auto max-w-2xl">
+        <Eyebrow>Legal</Eyebrow>
+        <h1 className="display mt-5 text-5xl">Terms of service</h1>
 
-        <p className="mt-4 rounded-lg border border-dashed border-border bg-surface px-4 py-3 text-sm">
+        <p className="mt-8 rounded-[6px] border border-dashed border-rule-strong bg-paper px-4 py-3 text-sm text-ink-soft">
           <strong>Draft — not legal advice.</strong> This page states the intended terms in plain
           language so the product can be built and reviewed. Have a lawyer replace it before
           taking payments from the public.
         </p>
 
+        <article className="prose-deal mt-10">
         <h2>What FoundersBee is</h2>
         <p>
           FoundersBee is an information service. We describe programs run by third parties and
@@ -51,7 +53,8 @@ export default function TermsPage() {
           sponsorship or endorsement is implied by a listing, except where the listing says
           explicitly that FoundersBee negotiated the offer.
         </p>
-      </article>
+        </article>
+      </div>
     </Container>
   );
 }

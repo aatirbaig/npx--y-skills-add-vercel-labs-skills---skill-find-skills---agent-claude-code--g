@@ -4,8 +4,8 @@ import { CATEGORIES, getCategory } from "@/content/categories";
 import { getDealsByCategory } from "@/lib/content/deals";
 import { toCards } from "@/lib/content/redact";
 import { DealsBrowser } from "@/components/deals-browser";
-import { Container } from "@/components/ui/section";
-import { formatUsd } from "@/lib/utils";
+import { Container, Eyebrow } from "@/components/ui/section";
+import { formatUsdExact } from "@/lib/utils";
 
 export function generateStaticParams() {
   return CATEGORIES.map((category) => ({ slug: category.slug }));
@@ -34,20 +34,25 @@ export default async function CategoryPage(props: PageProps<"/category/[slug]">)
   const total = deals.reduce((sum, d) => sum + d.savingsUsd, 0);
 
   return (
-    <Container className="py-12">
-      <header className="mb-10 max-w-3xl">
-        <p className="mb-2 font-mono text-xs tracking-widest text-accent-strong uppercase">
-          Category
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          {category.name}
-        </h1>
-        <p className="mt-3 text-lg leading-relaxed text-muted text-pretty">
-          {category.blurb}
-        </p>
-        <p className="mt-3 text-sm text-muted">
-          {deals.length} programs
-          {total > 0 ? ` · ${formatUsd(total)} in stated value` : ""}
+    <Container className="py-16">
+      <header className="mb-12 max-w-3xl">
+        <Eyebrow>Category</Eyebrow>
+        <h1 className="display mt-5 text-5xl sm:text-6xl">{category.name}</h1>
+        <p className="lede mt-6">{category.blurb}</p>
+        <p className="mt-5 text-sm text-ink-soft">
+          <span data-figure className="font-semibold text-ink">
+            {deals.length}
+          </span>{" "}
+          programs
+          {total > 0 ? (
+            <>
+              {" · "}
+              <span data-figure className="font-semibold text-ink">
+                {formatUsdExact(total)}
+              </span>{" "}
+              stated
+            </>
+          ) : null}
         </p>
       </header>
 

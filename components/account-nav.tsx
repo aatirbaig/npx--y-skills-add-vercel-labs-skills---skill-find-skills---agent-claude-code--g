@@ -7,9 +7,9 @@ import { buttonClass } from "@/components/ui/button";
 type SessionShape = { user?: { email?: string | null } } | null;
 
 /**
- * Kept on the client on purpose. Reading the session in the root layout would
- * opt every route — including the catalog and every deal page — out of static
- * rendering for the sake of one link in the header.
+ * Deliberately client-side: reading the session in the root layout would opt
+ * every route — the whole catalog included — out of static rendering for the
+ * sake of one link.
  */
 export function AccountNav({ authEnabled }: { authEnabled: boolean }) {
   const [session, setSession] = useState<SessionShape>(null);
@@ -34,7 +34,7 @@ export function AccountNav({ authEnabled }: { authEnabled: boolean }) {
 
   if (session?.user) {
     return (
-      <Link href="/dashboard" className={buttonClass("secondary", "sm")}>
+      <Link href="/dashboard" className={buttonClass("quiet", "sm")}>
         Dashboard
       </Link>
     );
@@ -46,14 +46,13 @@ export function AccountNav({ authEnabled }: { authEnabled: boolean }) {
         <Link
           href="/login"
           className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}
-          // Avoid flashing "Sign in" at a member before the session resolves.
           style={{ visibility: loaded ? "visible" : "hidden" }}
         >
           Sign in
         </Link>
       ) : null}
-      <Link href="/pricing" className={buttonClass("primary", "sm")}>
-        Get premium
+      <Link href="/pricing" className={buttonClass("foil", "sm")}>
+        Get access
       </Link>
     </>
   );

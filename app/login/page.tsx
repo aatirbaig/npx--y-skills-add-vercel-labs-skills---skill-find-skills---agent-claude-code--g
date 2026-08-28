@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Mail } from "lucide-react";
 import { auth, authConfigured, signIn } from "@/lib/auth";
-import { Container } from "@/components/ui/section";
+import { Container, Eyebrow } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -20,20 +20,21 @@ export default async function LoginPage(props: PageProps<"/login">) {
   const sendFailed = params.error === "send";
 
   return (
-    <Container className="flex min-h-[70vh] items-center justify-center py-16">
+    <Container className="flex min-h-[70vh] items-center justify-center py-20">
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold tracking-tight">Sign in to FoundersBee</h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
+        <Eyebrow>Members</Eyebrow>
+        <h1 className="display mt-4 text-4xl">Sign in</h1>
+        <p className="mt-3 leading-relaxed text-ink-soft">
           We email you a link. No password, no setup.
         </p>
 
         {sendFailed ? (
           <p
             role="alert"
-            className="mt-6 rounded-lg border border-accent/40 bg-accent-soft px-4 py-3 text-sm text-muted"
+            className="mt-6 rounded-[6px] border border-foil/40 bg-foil-wash px-4 py-3 text-sm text-ink-soft"
           >
-            We could not send that link. Try again in a moment — if it keeps
-            failing, the email provider is misconfigured on this deployment.
+            We could not send that link. Try again in a moment — if it keeps failing, the email
+            provider is misconfigured on this deployment.
           </p>
         ) : null}
 
@@ -61,7 +62,7 @@ export default async function LoginPage(props: PageProps<"/login">) {
               }
               redirect(destination);
             }}
-            className="mt-6 space-y-3"
+            className="mt-8 space-y-3"
           >
             <label htmlFor="email" className="sr-only">
               Email address
@@ -73,7 +74,7 @@ export default async function LoginPage(props: PageProps<"/login">) {
               required
               autoComplete="email"
               placeholder="you@company.com"
-              className="h-11 w-full rounded-lg border border-border bg-surface px-3.5 text-sm outline-none placeholder:text-muted focus:border-accent"
+              className="h-12 w-full rounded-[6px] border border-rule-strong bg-paper px-4 text-sm outline-none transition-colors duration-[160ms] [transition-timing-function:var(--ease-out)] placeholder:text-ink-soft focus:border-foil"
             />
             <Button type="submit" size="lg" className="w-full">
               <Mail className="size-4" aria-hidden="true" />
@@ -81,19 +82,19 @@ export default async function LoginPage(props: PageProps<"/login">) {
             </Button>
           </form>
         ) : (
-          <p className="mt-6 rounded-lg border border-dashed border-border bg-surface px-4 py-3 text-sm text-muted">
+          <p className="mt-8 rounded-[6px] border border-dashed border-rule-strong bg-paper px-4 py-3 text-sm text-ink-soft">
             Sign-in is not configured on this deployment. Set <code>AUTH_SECRET</code> in the
             environment to enable it.
           </p>
         )}
 
-        <p className="mt-6 text-xs leading-relaxed text-muted">
+        <p className="mt-8 text-xs leading-relaxed text-ink-soft">
           By signing in you agree to the{" "}
-          <a href="/terms" className="underline underline-offset-2">
+          <a href="/terms" className="text-foil-ink underline underline-offset-2">
             terms
           </a>{" "}
           and{" "}
-          <a href="/privacy" className="underline underline-offset-2">
+          <a href="/privacy" className="text-foil-ink underline underline-offset-2">
             privacy policy
           </a>
           .
